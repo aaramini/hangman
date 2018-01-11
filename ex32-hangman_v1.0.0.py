@@ -5,17 +5,17 @@
 #                    Exercise 32 - Hangman
 #    http://www.practicepython.org/exercise/2017/01/10/32-hangman.html
 #
-#         File Name:    ex32-hangman_v2.0.0.py
+#         File Name:    ex32-hangman_v1.0.0.py
 #    Python Version:    3.6.4
-#              Date:    Jan 9, 2018
+#              Date:    Jan 7, 2018
 #                By:    a_aramini
 #
 # You will need the "sowpods.txt" file in order for the random word
-# generation (and game) to work. You can download it here:
+# generation to work. You can download it here:
 #
 # http://norvig.com/ngrams/sowpods.txt
 #
-# (The file is approximately 3MB)
+# (The file is approx 3MB)
 #
 # Save the sowpods.txt file in the same directory as this python script
 # then run this script to play the game.
@@ -24,8 +24,8 @@
 
 import random
 import string
-import sys
 import os
+import sys
 
 def pick_word():
     with open('sowpods.txt', 'r') as f:
@@ -34,115 +34,88 @@ def pick_word():
 
 def clear_screen():
     if sys.platform  == 'win32':
-        clear = 'cls' # Windows/DOS
+        clear = 'cls'
     else:
-        clear = 'clear' # Unix/Linux/Mac
+        clear = 'clear'
     return clear
 
-def display_game(guesses_left, correct_letters, guessed):
-    # Clear the screen and then print out the text and ASCII art for a cleaner
-    # presentation to the user (prevents scrolling the screen)
+def draw_art(count, graphics):
+    print ("\n\n" + "\n".join(graphics[count]))
+
+def display_game(a, word, guessed, count, graphics):
+
     os.system(clear_screen())
 
     print (" " * 10 + "*" * 7 + "\n")
     print (" " * 10 + "HANGMAN\n")
     print (" " * 10 + "*" * 7)
-    print ("\n\n" + "\n".join(graphics[guesses_left]))
-    print ("\n" * 4 + " " * 5 + ' '.join(correct_letters) + "\n\n")
-    #print (" " * 2 + word + "\n" * 2) # prints the "secret" word to guess for testing
-    print ("\nGuesses left: %i \n" % guesses_left)
+
+    draw_art(count, graphics)
+
+    print ("\n" * 4 + " " * 5 + ' '.join(a) + "\n\n")
+    #print (" " * 2 + word + "\n" * 2)
+    print ("\nGuesses left: %i \n" % count)
     print ("Letters Guessed: " + ' '.join(set(guessed)))
+
+def check_guess(a, guess, word, guessed):
+    match = False
+    for i in range(len(word)):
+        if guess == word[i]:
+            a[i] = word[i]
+            match = True
+    return match
 
 def replay():
     while True:
-        ans = input("\nWould you like to play again? y or n?: ")
-        if ans == "y":
-            return start_game() # start the game again
+        a = input("\nWould you like to play again? y or n?: ")
+        if a == "y":
+            return play_game()
+        elif a == "n":
+            os._exit(1)    
 
-        else:
-            game_exit()    
-
-def game_exit():
-    # If exiting normally, we don't care about the traceback
-    # output, just suppress that and call sys.exit with the
-    # exit status (in this case a message) and exit cleanly
-    sys.tracebacklimit=0
-    print ("\n\n")
-    sys.exit("Good Bye!\n\n")
-
-def start_game():
+def play_game():
     word = pick_word()
-
-    guesses_left = 6 # Set the total number of guesses allowed
-    correct_letters = list("_" * len(word))
+    a = list("_" * len(word))
     guessed = []
+    count = 6 #len(word)
 
-    display_game(guesses_left, correct_letters, guessed)
+    display_game(a, word, guessed, count, graphics)
 
     while True:
         guess = input("\nEnter a letter to guess or type 'quit' to quit the game: ").upper()
-        if guess == "QUIT": # don't forget that we are now working with upper-case letters
-            game_exit()
+        if guess == "QUIT":
+            os._exit(1)
+        if len(guess) != 1 or guess not in string.ascii_letters:
+           print("Invalid input. Please Try Again.")
+           continue
 
-        elif len(guess) != 1 or guess not in string.ascii_letters:
-            print("Invalid input. Please Try Again.")
-            continue
-
-        elif guess in guessed:
+        if guess in guessed:
             print("You already guessed that letter! Try again")
             continue
 
-        else:
-            # Keep track of what letters have been guessed
-            guessed.append(guess)
+        guessed.append(guess)
 
-            # Check for a correct guess
-            m = 0
-            for i, letter in enumerate(word):
-                if guess == word[i]:
-                    correct_letters[i] = word[i]
-                    m += 1
+        if not check_guess(a, guess, word, guessed):
+            count -= 1
 
-        if m == 0:
-            guesses_left -= 1
+        display_game(a, word, guessed, count, graphics)
 
-        display_game(guesses_left, correct_letters, guessed)
-
-        if guesses_left <= 0:
+        if count <= 0:
             print ("No guesses left, You lose!\n\n")
             print ("The word was: " + word + "\n\n")
             break
 
-        elif ''.join(correct_letters) == word:
+        if ''.join(a) == word:
             print ("\nCongratulations! You guessed the word!: " + word + "\n\n")
             break
 
-        else:
-            continue
+        continue
 
     print ("Game Over!\n\n")
-    # We're out of the loop now, so reset variables to allow a fresh game if
-    # the user wants to play again, then call function that prompts the user
-    # for another game
-
-    del guessed
 
     replay()
 
 if __name__ == "__main__":
-
-    # Each element in graphics is a list with elements that represent one line
-    # of an ascii art graphic, that will be printed out by the display_game()
-    # function. They are then joined with a newline, ex. '\n'.join(graphics[i]),
-    # so that they will be reassembled and printed out correctly.
-    # 
-    # The spacing and order matters here!
-    #
-    # Element 0 is the the last graphic we display because we are using
-    # guesses_left which starts at 6 and is decremented for ever wrong
-    # guess so the first time we print a graphic, we are printing graphics[6],
-    # then graphics[5], then graphics[4]...etc each time we decrement the variable    
-
     graphics = [
            ["     +--------------+        ", "     |              |        ", "     |              |        ",
             "     |              |        ", "     |           -------     ", "     |          | X   X |    ",
@@ -201,4 +174,5 @@ if __name__ == "__main__":
             "     |                       ", "     |                       ", "     |                       ",
             "     |                       ", "-----------                  "]
 ]
-    start_game()
+
+    play_game()
