@@ -1,0 +1,42 @@
+
+v2.0.0
+
+Refactored the code a bit to make it cleaner and more readable. Added comments
+for clarity. Should be easier to follow the code...(less spaghetti, more ravioli).
+
+
+With the exception of display_game (which takes 3 arguments), all functions now
+do not need any arguments passed to them.
+
+*	Renamed the main body function, play_game(), to start_game()
+ 
+
+Removed 2 functions...
+
+The following functions took too many arguments and were removed:
+
+*	Removed draw_art(), a one line function that just printed the appropriate graphic
+	from the graphics list. The line has been incorporated into the display_game()
+	function on line 54.
+
+*	Removed check_guess function and incorporated the logic/functionality into
+	start_game() on lines 86-91.
+
+Added 1 function...
+
+*   game_exit() - a cleaner and way to exit than calling os._exit(1). Since this
+    function is explicitly called when the user wants to quit, traceback is
+    suppressed and we just print "Good Bye!"
+    
+
+
+Renamed 3 variables to make their purpose clearer:
+
+*	start_game() local variable a was renamed to correct_letters
+    
+*	replay() local variable a was renamed to ans (shorthand for answer)
+    
+*	count was renamed to guesses_left
+
+*	With the exception of graphics (because it's a huge list containing ASCII art)
+	all global variables were moved to start_game() and are now locals 

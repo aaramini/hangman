@@ -1,0 +1,62 @@
+<html>
+<head>
+   <title></title>
+      
+      <head>
+         <body>
+             <p><b>v2.0.0</b>
+            </p>
+             <p>
+                Refactored the code a bit to make it cleaner and more readable. Added comments<br />
+                for clarity. Should be easier to follow the code...(less spaghetti, more ravioli).<br />
+            </p>
+
+             <p>
+                With the exception of display_game (which takes 3 arguments), all functions now<br />
+                do not need any arguments passed to them.<br />
+            </p>
+            <ul>
+            <li>Renamed the main body function, <b>play_game()</b>, to <b>start_game()</b><br />
+           </li>
+           </ul>
+             <p>
+                Removed 2 functions...<br />
+            </p>
+             <p>
+                The following functions took too many arguments and were removed:<br />
+            </p>
+            <ul>
+            <li>Removed <b>draw_art()</b>, a one line function that just printed the<br />
+                appropriate graphic from the <b>graphics</b> list.
+
+                The line has been incorporated into the <b>display_game()</b> function on<br />
+                <b>line 54</b>.<br /><br />
+           </li>
+
+            <li>Removed <b>check_guess</b> function and incorporated the logic/functionality into<br />
+                <b>start_game()</b> on <b>lines 86 -91</b>.<br />
+           </li> 
+           </ul>
+             <p>Added 1 function...
+            </p>
+            <ul>
+            <li><b>game_exit()</b> - a cleaner and way to exit than calling os._exit(1). Since this<br />
+                function is explicitly called when the user wants to quit, traceback is<br />
+                suppressed and we just print "Good Bye!"<br />
+           </li>
+           </ul>    
+             <p>Renamed 3 variables to make their purpose clearer:<br />
+            </p>
+            <ul>
+            <li>start_game() local variable <b>a</b> was renamed to <b>correct_letters</b><br /><br />
+           </li>
+            <li>replay() local variable <b>a</b> was renamed to <b>ans</b> (shorthand for answer)<br /><br />
+           </li>
+            <li><b>count</b> was renamed to <b>guesses_left</b><br />
+           </li>
+           </ul>
+             <p>With the exception of <b>graphics</b> (because it's a huge list containing ASCII art)<br />
+                all global variables were moved to <b>start_game()</b> and are now locals.<br />
+            </p>
+         </body>
+</html>
