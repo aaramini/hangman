@@ -3,11 +3,12 @@
 ##########################################################################
 #
 #                    Exercise 32 - Hangman
-#                        revision 2
-#                        Jan 9, 2018
-#                        By: a_aramini
+#    http://www.practicepython.org/exercise/2017/01/10/32-hangman.html
 #
-# http://www.practicepython.org/exercise/2017/01/10/32-hangman.html
+#         File Name:    ex32-hangman_v2.0.0.py
+#    Python Version:    3.6.4
+#              Date:    Jan 9, 2018
+#                By:    a_aramini
 #
 # You will need the "sowpods.txt" file in order for the random word
 # generation (and game) to work. You can download it here:
@@ -56,13 +57,14 @@ def replay():
     while True:
         ans = input("\nWould you like to play again? y or n?: ")
         if ans == "y":
-            return start_game()
-        elif ans == "n":
+            return start_game() # start the game again
+
+        else:
             game_exit()    
 
 def game_exit():
-    #If exiting normally, we don't care about the traceback
-    # output just suppress that, call sys.exit with the
+    # If exiting normally, we don't care about the traceback
+    # output, just suppress that and call sys.exit with the
     # exit status (in this case a message) and exit cleanly
     sys.tracebacklimit=0
     print ("\n\n")
@@ -70,7 +72,7 @@ def game_exit():
 
 def start_game():
     word = pick_word()
-    
+
     guesses_left = 6 # Set the total number of guesses allowed
     correct_letters = list("_" * len(word))
     guessed = []
@@ -86,22 +88,24 @@ def start_game():
             print("Invalid input. Please Try Again.")
             continue
 
-        if guess in guessed:
+        elif guess in guessed:
             print("You already guessed that letter! Try again")
             continue
-        # Keep track of what letters have been guessed
-        guessed.append(guess)
 
-        # Check for a correct guess
-        m = 0
-        for i, letter in enumerate(word):
-            if guess == word[i]:
-                correct_letters[i] = word[i]
-                m += 1
-    
+        else:
+            # Keep track of what letters have been guessed
+            guessed.append(guess)
+
+            # Check for a correct guess
+            m = 0
+            for i, letter in enumerate(word):
+                if guess == word[i]:
+                    correct_letters[i] = word[i]
+                    m += 1
+
         if m == 0:
             guesses_left -= 1
-        
+
         display_game(guesses_left, correct_letters, guessed)
 
         if guesses_left <= 0:
@@ -109,19 +113,20 @@ def start_game():
             print ("The word was: " + word + "\n\n")
             break
 
-        if ''.join(correct_letters) == word:
+        elif ''.join(correct_letters) == word:
             print ("\nCongratulations! You guessed the word!: " + word + "\n\n")
             break
 
-        continue
+        else:
+            continue
 
     print ("Game Over!\n\n")
     # We're out of the loop now, so reset variables to allow a fresh game if
     # the user wants to play again, then call function that prompts the user
     # for another game
- 
+
     del guessed
-    
+
     replay()
 
 if __name__ == "__main__":
